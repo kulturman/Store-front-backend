@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"tsc --watch\" \" nodemon dist/server.js\" ",
     "migrate": "db-migrate up --config database.json",
+    "migrate:rollback": "db-migrate down",
+    "db-create": "dotenv -e .env -- cross-var db-migrate db:create %DB_NAME%",
+    "db-drop": "dotenv -e .env -- cross-var db-migrate db:drop %DB_NAME%",
     "build": "tsc"
   },
   "repository": {
@@ -21,9 +24,11 @@
   },
   "homepage": "https://github.com/kulturman/Store-front-backend#readme",
   "dependencies": {
+    "cross-var": "^1.1.0",
     "db-migrate": "^0.11.13",
     "db-migrate-pg": "^1.2.2",
     "dotenv": "^16.0.3",
+    "dotenv-cli": "^6.0.0",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.8.0"

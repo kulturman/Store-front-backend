@@ -5,6 +5,6 @@
         "password": { "ENV": "POSTGRES_PASSWORD" },
         "host": "localhost",
         "port": "5432",
-        "database": { "ENV": "POSTGRES_DB" }
+        "database": { "ENV": "DB_NAME" }
     }
 }
