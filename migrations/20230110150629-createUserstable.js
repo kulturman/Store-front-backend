@@ -19,7 +19,8 @@ exports.up = function(db, callback) {
     id: { type: 'int', primaryKey: true, autoIncrement: true },
     firstName: { type: 'string', length: 255 },
     lastName: { type: 'string', length: 255 },
-    password: { type: 'string', length: 255 }
+    password: { type: 'string', length: 255 },
+    username: { type: 'string', unique: true }
   }, callback)
 };
 
