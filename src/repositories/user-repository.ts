@@ -40,6 +40,7 @@ export class UserRepository extends AbstractRepository<User> {
     //I cannot really do better, as database row may be anithing
     private mapToUser(row: any): User {
         return {
+            id: row.id,
             name: row.firstName,
             lastName: row.firstName,
             firstName: row.firstName,
