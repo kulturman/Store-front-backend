@@ -6,6 +6,7 @@ import { compare } from 'bcrypt';
 const userRepository = new UserRepository();
 
 export function getAll(req: Request, res: Response) {
+    //const users = get
     return res.send('It works');
 }
 
@@ -33,13 +34,13 @@ export async function auth(req: Request, res: Response) {
         return res.status(400).send({ message: 'Incorrect username or password' });
     }
 
-    const token = process.env.JWT_SECRET_KEY;
+    const secretKey = process.env.JWT_SECRET_KEY;
 
-    if (token === undefined) {
+    if (secretKey === undefined) {
         return res.status(500).send({ message: 'Internal server error' });
     }
 
     return res.json({
-        token: sign({ userId: user.id }, token)
+        token: sign({ userId: user.id }, secretKey, { expiresIn: '24h' })
     });
 }
