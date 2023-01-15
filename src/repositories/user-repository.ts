@@ -1,6 +1,7 @@
 import { User } from "../models/user";
 import { AbstractRepository } from "./abstract-repository";
 import client from "./db";
+
 export class UserRepository extends AbstractRepository<User> {
 
     getTableName(): string {

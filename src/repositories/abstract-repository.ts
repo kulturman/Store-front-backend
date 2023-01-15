@@ -14,17 +14,6 @@ export abstract class AbstractRepository <T extends Record<string, any>> {
     }
 
     async create(t: T): Promise<boolean> {
-        /*const hashedPassword = await bcrypt.hash(user.password, 10);
-
-        return client.query('INSERT INTO users ("firstName", "lastName", username, password) VALUES($1, $2, $3, $4)', [
-            user.firstName, user.lastName, user.username, hashedPassword
-        ])
-        .then(res => {
-            if (res.rowCount > 0) {
-                return Promise.resolve(true);
-            }
-            return Promise.resolve(true);
-        });*/
         const { query, values } = this.generateCreateQuery(t);
 
         return client.query(query, values)
