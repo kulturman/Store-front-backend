@@ -5,9 +5,9 @@ import { compare } from 'bcrypt';
 
 const userRepository = new UserRepository();
 
-export function getAll(req: Request, res: Response) {
-    //const users = get
-    return res.send('It works');
+export async function getAll(req: Request, res: Response) {
+    const data = await userRepository.getAll();
+    return res.send(data);
 }
 
 export async function create(req: Request, res: Response) {

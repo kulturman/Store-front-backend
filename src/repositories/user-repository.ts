@@ -5,8 +5,19 @@ import * as bcrypt from 'bcrypt';
 
 export class UserRepository extends AbstractRepository<User> {
 
-    getAll(): Promise<User[]> {
-        throw new Error("Method not implemented.");
+    getTableName(): string {
+        return 'users';
+    }
+
+    mapToEntity(row: any): User {
+        return {
+            id: row.id,
+            name: row.firstName,
+            lastName: row.firstName,
+            firstName: row.firstName,
+            password: row.password,
+            username: row.username
+        };
     }
 
     async create(user: User): Promise<boolean> {
@@ -22,31 +33,14 @@ export class UserRepository extends AbstractRepository<User> {
             return Promise.resolve(true);
         });
     }
-
-    findOne(id: number): Promise<User> {
-        throw new Error("Method not implemented.");
-    }
     
     findByUsername(username: string): Promise<User | null> {
         return client.query('SELECT * from users WHERE username = $1', [username])
             .then(res => {
                 if (res.rows[0]) {
-                    return Promise.resolve(this.mapToUser(res.rows[0]));
+                    return Promise.resolve(this.mapToEntity(res.rows[0]));
                 }
                 return Promise.resolve(null);
             });
     }
-
-    //I cannot really do better, as database row may be anithing
-    private mapToUser(row: any): User {
-        return {
-            id: row.id,
-            name: row.firstName,
-            lastName: row.firstName,
-            firstName: row.firstName,
-            password: row.password,
-            username: row.username
-        };
-    }
-
 }
