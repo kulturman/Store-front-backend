@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watch",
-    "dev": "concurrently \"tsc --watch\" \" nodemon dist/server.js\" ",
+    "dev": "concurrently \"tsc --watch\" \" nodemon dist/src/server.js\" ",
     "migrate": "db-migrate up --config database.json",
     "migrate:rollback": "db-migrate down",
     "db-create": "dotenv -e .env -- cross-var db-migrate db:create %DB_NAME%",

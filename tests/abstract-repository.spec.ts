@@ -26,7 +26,7 @@ describe('Abstract repo test', () => {
     const fakeRepository = new FakeRepository();
     const fake: Fake = { id: 2, name: 'test', label: 'fake', age: 30};
 
-    test('Select statement', () => {
+    test('INSERT statement', () => {
         const { query, values } = fakeRepository.generateCreateQuery(fake);
         expect(query)
         .toEqual('INSERT INTO fakes ("age", "label", "name") VALUES($1, $2, $3)');
