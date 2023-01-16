@@ -6,7 +6,9 @@ import { compare, hash } from 'bcrypt';
 const userRepository = new UserRepository();
 
 export async function getAll(req: Request, res: Response) {
-    const data = await userRepository.getAll();
+    const page = req.query.page ? +req.query.page : 1;
+
+    const data = await userRepository.getAll(page);
     return res.send(data);
 }
 

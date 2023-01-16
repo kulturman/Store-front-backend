@@ -4,7 +4,9 @@ import { ProductRepository } from "../repositories/product-repository";
 const productRepository = new ProductRepository();
 
 export async function getAll(req: Request, res: Response) {
-    const data = await productRepository.getAll();
+    const page = req.query.page ? +req.query.page : 1;
+
+    const data = await productRepository.getAll(page);
     return res.send(data);
 }
 
