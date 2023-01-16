@@ -5,12 +5,12 @@ export abstract class AbstractRepository <T extends Record<string, any>> {
         const { rows } = await client.query(`SELECT COUNT(*) FROM ${this.getTableName()}`);
         const numberOfPages = Math.ceil(rows[0].count / limit);
 
-        const { rows: data, rowCount: totalRows } = await client.query(
+        const { rows: data } = await client.query(
             `SELECT * FROM ${this.getTableName()} ORDER BY id ASC LIMIT $1 OFFSET $2`,
             [limit, (page - 1) * limit]
         );
         
-        return { data, meta: { numberOfPages, totalRows}};
+        return { data, meta: { numberOfPages, totalRows: rows[0].count } };
     }
 
     async create(t: T): Promise<boolean> {
