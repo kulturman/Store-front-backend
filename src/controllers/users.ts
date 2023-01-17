@@ -51,3 +51,14 @@ export async function auth(req: Request, res: Response) {
         token: generateUserToken(user)
     });
 }
+
+export async function remove(req: Request, res: Response) {
+    const user = await userRepository.findOne(+req.params.id);
+
+    if (user === null) {
+        return res.status(404).json({ 'message' : 'User not found' });
+    }
+
+    await userRepository.delete(+req.params.id);
+    return res.send();
+}

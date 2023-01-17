@@ -53,6 +53,16 @@ export abstract class AbstractRepository <T extends Record<string, any>> {
             });
     }
 
+    delete(id: number): Promise<boolean> {
+        return client.query(`DELETE FROM ${this.getTableName()} WHERE id = $1`, [id])
+            .then(res => {
+                if (res.rowCount > 0) {
+                    return Promise.resolve(true);
+                }
+                return Promise.resolve(true);
+            }); 
+    }
+
     //I cannot really do better, as database row may be anithing
     abstract mapToEntity(row: any): T;
     abstract getTableName(): string;

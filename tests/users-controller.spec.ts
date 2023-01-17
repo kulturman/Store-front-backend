@@ -1,6 +1,7 @@
 import request from "supertest";
 import { generateUserToken } from "../src/helpers/token-helper";
 import client from "../src/repositories/db";
+import { UserRepository } from "../src/repositories/user-repository";
 import app from "../src/server";
 
 const token = generateUserToken({
@@ -33,7 +34,7 @@ describe('GET /api/users', () => {
             .expect(200);
 
         expect(result.body.data[0]).toMatchObject({
-            id: 1,
+            id: 100,
             firstName: 'Itachi',
             lastName: 'UCHIHA',
             password: '',
@@ -58,12 +59,12 @@ describe('GET /users/id', () => {
 
     it('Should return user data if it exists', async () => {
         const { body } = await request(app)
-            .get('/api/users/2')
+            .get('/api/users/200')
             .set('Authorization', `Bearer ${token}`)
             .expect(200);
         expect(body)
             .toMatchObject({
-                id: 2,
+                id: 200,
                 lastName: 'Mdara',
                 firstName: 'Mdara',
                 password: '',
@@ -106,5 +107,26 @@ describe('POST /users', () => {
                 username: 'sasuke'
             })
             .expect(201);
+    })
+})
+
+describe('DELETE /users/:id', () => {
+    beforeEach(async () => {
+        await client.query('BEGIN');
+    });
+
+    afterEach(async () => {
+        await client.query('ROLLBACK');
+    });
+
+    it('Should return 200 if user is deleted', async () => {
+        const userRepository = new UserRepository();
+        expect(await userRepository.findOne(100)).toBeTruthy();
+
+        await request(app)
+            .delete('/api/users/100')
+            .set('Authorization', `Bearer ${token}`)
+            .expect(200);
+        expect(await userRepository.findOne(100)).toBeFalsy();
     })
 })

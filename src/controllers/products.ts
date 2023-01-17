@@ -24,3 +24,14 @@ export async function create(req: Request, res: Response) {
     const result = await productRepository.create({ ...req.body });
     return result ? res.status(201).json() : res.status(400).send({ 'message' : 'Unable to create product' });
 }
+
+export async function remove(req: Request, res: Response) {
+    const user = await productRepository.findOne(+req.params.id);
+
+    if (user === null) {
+        return res.status(404).json({ 'message' : 'Product not found' });
+    }
+
+    await productRepository.delete(+req.params.id);
+    return res.send();
+}
