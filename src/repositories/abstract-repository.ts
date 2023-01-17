@@ -13,16 +13,13 @@ export abstract class AbstractRepository <T extends Record<string, any>> {
         return { data, meta: { numberOfPages, totalRows: +rows[0].count } };
     }
 
-    async create(t: T): Promise<boolean> {
+    async create(t: T): Promise<T> {
         const { query, values } = this.generateCreateQuery(t);
-
+        
         return client.query(query, values)
-        .then(res => {
-            if (res.rowCount > 0) {
-                return Promise.resolve(true);
-            }
-            return Promise.resolve(true);
-        }); 
+            .then(res => {
+                return Promise.resolve(this.mapToEntity(res.rows[0]));
+            }); 
     }
 
     generateCreateQuery(t: T): {
@@ -35,7 +32,7 @@ export abstract class AbstractRepository <T extends Record<string, any>> {
         const values = validColumns.map(column => t[column]);
         const columnsPlaceHolders = validColumns.map((column, index) => `\$${index + 1}`).join(', ');
 
-        const query = `INSERT INTO ${this.getTableName()} (${columnsNames}) VALUES(${columnsPlaceHolders})`;
+        const query = `INSERT INTO ${this.getTableName()} (${columnsNames}) VALUES(${columnsPlaceHolders}) RETURNING *`;
 
         return {
             query,

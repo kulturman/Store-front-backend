@@ -8,7 +8,7 @@ interface Fake {
 }
 
 class FakeRepository extends AbstractRepository<Fake> {
-    create(t: Fake): Promise<boolean> {
+    create(t: Fake): Promise<Fake> {
         throw new Error("Method not implemented.");
     }
 
@@ -30,7 +30,7 @@ describe('Abstract repo test', () => {
 
         const { query, values } = fakeRepository.generateCreateQuery(fake);
         expect(query)
-        .toEqual('INSERT INTO fakes ("age", "label", "name") VALUES($1, $2, $3)');
+        .toEqual('INSERT INTO fakes ("age", "label", "name") VALUES($1, $2, $3) RETURNING *');
 
         expect(values).toEqual([fake.age, fake.label, fake.name])
     })
@@ -40,7 +40,7 @@ describe('Abstract repo test', () => {
 
         const { query, values } = fakeRepository.generateCreateQuery(fake);
         expect(query)
-        .toEqual('INSERT INTO fakes ("age", "id", "label", "name") VALUES($1, $2, $3, $4)');
+            .toEqual('INSERT INTO fakes ("age", "id", "label", "name") VALUES($1, $2, $3, $4) RETURNING *');
 
         expect(values).toEqual([fake.age, fake.id, fake.label, fake.name])
     })

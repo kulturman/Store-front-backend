@@ -11,7 +11,7 @@ export class UserRepository extends AbstractRepository<User> {
     mapToEntity(row: any): User {
         return {
             id: row.id,
-            lastName: row.firstName,
+            lastName: row.lastName,
             firstName: row.firstName,
             password: row.password,
             username: row.username

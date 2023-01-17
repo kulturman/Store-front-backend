@@ -29,9 +29,9 @@ export async function create(req: Request, res: Response) {
         return res.status(400).json({ 'message' : 'Username is already taken' })
     }
 
-    const hashedPassword = hash(req.body.password, 10);
+    const hashedPassword = await hash(req.body.password, 10);
     const result = await userRepository.create({ ...req.body, password: hashedPassword });
-    return result ? res.status(201).json() : res.status(400).send({ 'message' : 'Unable to create user' });
+    return res.status(201).json(result);
 }
 
 export async function auth(req: Request, res: Response) {

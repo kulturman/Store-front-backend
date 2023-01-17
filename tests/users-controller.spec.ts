@@ -65,7 +65,7 @@ describe('GET /users/id', () => {
         expect(body)
             .toMatchObject({
                 id: 200,
-                lastName: 'Mdara',
+                lastName: 'UCHIHA',
                 firstName: 'Mdara',
                 password: '',
                 username: 'madara'
@@ -97,16 +97,24 @@ describe('POST /users', () => {
     })
 
     it('Should return 201 for success', async () => {
-        await request(app)
+        const { body } = await request(app)
             .post('/api/users')
             .set('Authorization', `Bearer ${token}`)
             .send({
                 firstName: 'Sasuke',
                 lastName: 'UCHIHA',
-                password: '1234567',
+                password: '1234567@@',
                 username: 'sasuke'
             })
             .expect(201);
+
+        expect(body).toMatchObject({
+            id: expect.any(Number),
+            username: 'sasuke',
+            firstName: 'Sasuke',
+            lastName: 'UCHIHA',
+            password: expect.any(String),
+        })
     })
 })
 
