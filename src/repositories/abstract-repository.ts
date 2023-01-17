@@ -10,7 +10,7 @@ export abstract class AbstractRepository <T extends Record<string, any>> {
             [limit, (page - 1) * limit]
         );
         
-        return { data, meta: { numberOfPages, totalRows: rows[0].count } };
+        return { data, meta: { numberOfPages, totalRows: +rows[0].count } };
     }
 
     async create(t: T): Promise<boolean> {
@@ -29,7 +29,8 @@ export abstract class AbstractRepository <T extends Record<string, any>> {
         query: string,
         values: Array<any>
     } {
-        const validColumns = Object.keys(Object(t)).sort().filter(column => column !== 'id');
+        //This is less efficient but short and cleaner
+        const validColumns = Object.keys(Object(t)).sort().filter(column => !t['id'] ? column !== 'id' : true);
         const columnsNames = validColumns.map(column => `"${column}"`).join(', ');
         const values = validColumns.map(column => t[column]);
         const columnsPlaceHolders = validColumns.map((column, index) => `\$${index + 1}`).join(', ');

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { UserRepository } from "../repositories/user-repository";
-import { sign } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
+import { generateUserToken } from "../helpers/token-helper";
 
 const userRepository = new UserRepository();
 
@@ -47,13 +47,7 @@ export async function auth(req: Request, res: Response) {
         return res.status(400).send({ message: 'Incorrect username or password' });
     }
 
-    const secretKey = process.env.JWT_SECRET_KEY;
-
-    if (secretKey === undefined) {
-        return res.status(500).send({ message: 'Internal server error' });
-    }
-
     return res.json({
-        token: sign({ userId: user.id }, secretKey, { expiresIn: '24h' })
+        token: generateUserToken(user)
     });
 }

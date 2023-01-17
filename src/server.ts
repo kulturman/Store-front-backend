@@ -1,13 +1,16 @@
 import express, { Express } from 'express';
+import { configureDotEnv } from './helpers/config-helper';
 import { initializeRouting } from './startup/routes';
-import { config } from 'dotenv';
 
 const app: Express = express();
 const port = 3000;
 
-config();
-
+configureDotEnv();
 app.use(express.json());
 initializeRouting(app);
 
-app.listen(port, () => console.log(`App listening on port ${port}`));
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => console.log(`App listening on port ${port}`));
+}
+
+export default app;

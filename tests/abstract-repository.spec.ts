@@ -24,13 +24,24 @@ class FakeRepository extends AbstractRepository<Fake> {
 
 describe('Abstract repo test', () => {
     const fakeRepository = new FakeRepository();
-    const fake: Fake = { id: 2, name: 'test', label: 'fake', age: 30};
 
-    test('INSERT statement', () => {
+    test('INSERT statement with no enforced id', () => {
+        const fake: Fake = { id: 0, name: 'test', label: 'fake', age: 30};
+
         const { query, values } = fakeRepository.generateCreateQuery(fake);
         expect(query)
         .toEqual('INSERT INTO fakes ("age", "label", "name") VALUES($1, $2, $3)');
 
         expect(values).toEqual([fake.age, fake.label, fake.name])
+    })
+
+    test('INSERT statement with enforced id', () => {
+        const fake: Fake = { id: 2, name: 'test', label: 'fake', age: 30};
+
+        const { query, values } = fakeRepository.generateCreateQuery(fake);
+        expect(query)
+        .toEqual('INSERT INTO fakes ("age", "id", "label", "name") VALUES($1, $2, $3, $4)');
+
+        expect(values).toEqual([fake.age, fake.id, fake.label, fake.name])
     })
 })

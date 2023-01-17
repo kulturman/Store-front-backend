@@ -1,8 +1,7 @@
 import { Client } from "pg";
+import { configureDotEnv } from "../helpers/config-helper";
 
-import { config } from "dotenv";
-
-config();
+configureDotEnv();
 
 const client = new Client({
     user: process.env.POSTGRES_USER,
