@@ -26,9 +26,9 @@ export async function create(req: Request, res: Response) {
 }
 
 export async function remove(req: Request, res: Response) {
-    const user = await productRepository.findOne(+req.params.id);
+    const product = await productRepository.findOne(+req.params.id);
 
-    if (user === null) {
+    if (product === null) {
         return res.status(404).json({ 'message' : 'Product not found' });
     }
 
