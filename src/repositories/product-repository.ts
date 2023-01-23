@@ -10,8 +10,8 @@ export class ProductRepository extends AbstractRepository<Product> {
     mapToEntity(row: any): Product {
         return {
             id: row.id,
-            name: row.firstName,
-            price: row.price
+            name: row.name,
+            price: +row.price
         };
     }
 }

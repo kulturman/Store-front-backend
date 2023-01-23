@@ -9,13 +9,19 @@ export abstract class AbstractRepository <T extends Record<string, any>> {
             `SELECT * FROM ${this.getTableName()} ORDER BY id ASC LIMIT $1 OFFSET $2`,
             [limit, (page - 1) * limit]
         );
-        
-        return { data, meta: { numberOfPages, totalRows: +rows[0].count } };
+
+        const entities: Array<T> = [];
+
+        //Map data here
+        data.forEach(item => {
+            entities.push(this.mapToEntity(item));
+        });
+
+        return { data: entities, meta: { numberOfPages, totalRows: +rows[0].count } };
     }
 
     async create(t: T): Promise<T> {
         const { query, values } = this.generateCreateQuery(t);
-        
         return client.query(query, values)
             .then(res => {
                 return Promise.resolve(this.mapToEntity(res.rows[0]));

@@ -22,7 +22,7 @@ export async function find(req: Request, res: Response) {
 
 export async function create(req: Request, res: Response) {
     const result = await productRepository.create({ ...req.body });
-    return result ? res.status(201).json() : res.status(400).send({ 'message' : 'Unable to create product' });
+    return res.status(201).json(result);
 }
 
 export async function remove(req: Request, res: Response) {

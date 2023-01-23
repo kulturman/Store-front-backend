@@ -1,4 +1,6 @@
+import { Product } from "../models/product";
 import { User } from "../models/user";
+import { ProductRepository } from "../repositories/product-repository";
 import { UserRepository } from "../repositories/user-repository";
 
 export function addFixtures() {
@@ -28,8 +30,24 @@ export function addFixtures() {
         }
     ];
 
-    const userRepository = new UserRepository();
-    users.forEach(user => promises.push(userRepository.create(user)));
+    const products: Array<Product> = [
+        {
+            id: 1000,
+            name: 'Red wine',
+            price: 35
+        }, 
+        {
+            id: 1100,
+            name: 'Burger',
+            price: 58.40
+        }
+    ]
 
-    Promise.all(promises);
+    const userRepository = new UserRepository();
+    const productRepository = new ProductRepository();
+
+    users.forEach(user => promises.push(userRepository.create(user)));
+    products.forEach(product => promises.push(productRepository.create(product)));
+    
+    return Promise.all(promises);
 }
