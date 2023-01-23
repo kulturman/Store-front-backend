@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AbstractRepository } from "../src/repositories/abstract-repository";
 
 interface Fake {
@@ -12,6 +13,7 @@ class FakeRepository extends AbstractRepository<Fake> {
     throw new Error("Method not implemented.");
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapToEntity(row: any): Fake {
     throw new Error("Method not implemented.");
   }

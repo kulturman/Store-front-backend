@@ -4,7 +4,7 @@ import { ProductRepository } from "../repositories/product-repository";
 import { UserRepository } from "../repositories/user-repository";
 
 export function addFixtures() {
-  const promises: Array<Promise<any>> = [];
+  const promises: Array<Promise<User | Product>> = [];
 
   const users: Array<User> = [
     {

@@ -1,5 +1,7 @@
 import client from "./db";
 
+//Since this should be generic I cannot really do better than any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class AbstractRepository<T extends Record<string, any>> {
   async getAll(
     page = 1,
@@ -40,6 +42,8 @@ export abstract class AbstractRepository<T extends Record<string, any>> {
 
   generateCreateQuery(t: T): {
     query: string;
+    //Since This is generic I have no choice
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     values: Array<any>;
   } {
     //This is less efficient but short and cleaner
@@ -82,7 +86,8 @@ export abstract class AbstractRepository<T extends Record<string, any>> {
       });
   }
 
-  //I cannot really do better, as database row may be anything
+  //Since mapToEntity is generic I really don't have any choice
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract mapToEntity(row: any): T;
   abstract getTableName(): string;
 }

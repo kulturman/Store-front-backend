@@ -7,6 +7,8 @@ export class UserRepository extends AbstractRepository<User> {
     return "users";
   }
 
+  //Since mapToEntity is generic I really don't have any choice
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapToEntity(row: any): User {
     return {
       id: row.id,

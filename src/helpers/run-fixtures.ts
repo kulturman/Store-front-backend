@@ -1,7 +1,7 @@
 import { addFixtures } from "./fixture-helper";
 
 (async function () {
-  addFixtures().then((data) => {
+  addFixtures().then(() => {
     console.log("Fixtures run successfully");
     process.exit(0);
   });
