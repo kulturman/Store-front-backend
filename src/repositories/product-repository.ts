@@ -2,16 +2,15 @@ import { Product } from "../models/product";
 import { AbstractRepository } from "./abstract-repository";
 
 export class ProductRepository extends AbstractRepository<Product> {
+  getTableName(): string {
+    return "products";
+  }
 
-    getTableName(): string {
-        return 'products';
-    }
-
-    mapToEntity(row: any): Product {
-        return {
-            id: row.id,
-            name: row.name,
-            price: +row.price
-        };
-    }
+  mapToEntity(row: any): Product {
+    return {
+      id: row.id,
+      name: row.name,
+      price: +row.price,
+    };
+  }
 }
