@@ -47,4 +47,15 @@ describe("Abstract repo test", () => {
 
     expect(values).toEqual([fake.age, fake.id, fake.label, fake.name]);
   });
+
+  test("UPDATE statement", () => {
+    const fake: Fake = { id: 2, name: "test", label: "fake", age: 30 };
+
+    const { query, values } = fakeRepository.generateUpdateQuery(fake);
+    expect(query).toEqual(
+      'UPDATE fakes SET "age" = $1, "label" = $2, "name" = $3 WHERE "id" = $4'
+    );
+
+    expect(values).toEqual([fake.age, fake.label, fake.name, fake.id]);
+  });
 });
