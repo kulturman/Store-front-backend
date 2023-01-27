@@ -1,5 +1,8 @@
 import request from "supertest";
-import { generateUserToken } from "../src/helpers/token-helper";
+import {
+  generatePassword,
+  generateUserToken,
+} from "../src/helpers/token-helper";
 import client from "../src/repositories/db";
 import { UserRepository } from "../src/repositories/user-repository";
 import app from "../src/server";
@@ -132,5 +135,38 @@ describe("DELETE /users/:id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200);
     expect(await userRepository.findOne(100)).toBeFalsy();
+  });
+});
+
+describe("UPDATE /users/:id", () => {
+  beforeEach(async () => {
+    await client.query("BEGIN");
+  });
+
+  afterEach(async () => {
+    await client.query("ROLLBACK");
+  });
+
+  it("Should return 200 if user is updated", async () => {
+    const userRepository = new UserRepository();
+
+    await request(app)
+      .put("/api/users/100")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        firstName: "Sasuke!!!",
+        lastName: "UCHIHA!",
+        password: "123456",
+        username: "sasuke!",
+      })
+      .expect(200);
+    const user = await userRepository.findOne(100);
+
+    expect(user).toMatchObject({
+      firstName: "Sasuke!!!",
+      lastName: "UCHIHA!",
+      password: expect.any(String),
+      username: "sasuke!",
+    });
   });
 });

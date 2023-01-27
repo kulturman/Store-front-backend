@@ -101,3 +101,32 @@ describe("DELETE /products/:id", () => {
     expect(await productRepository.findOne(1000)).toBeFalsy();
   });
 });
+
+describe("UPDATE /products/:id", () => {
+  beforeEach(async () => {
+    await client.query("BEGIN");
+  });
+
+  afterEach(async () => {
+    await client.query("ROLLBACK");
+  });
+
+  it("Should return 200 if product is updated", async () => {
+    const productRepository = new ProductRepository();
+
+    await request(app)
+      .put("/api/products/1000")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "Burger king!!!!",
+        price: 2000,
+      })
+      .expect(200);
+    const user = await productRepository.findOne(1000);
+
+    expect(user).toMatchObject({
+      name: "Burger king!!!!",
+      price: 2000,
+    });
+  });
+});

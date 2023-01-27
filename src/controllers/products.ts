@@ -35,3 +35,17 @@ export async function remove(req: Request, res: Response) {
   await productRepository.delete(+req.params.id);
   return res.send();
 }
+
+export async function update(req: Request, res: Response) {
+  const product = await productRepository.findOne(+req.params.id);
+
+  if (product === null) {
+    return res.status(404).json({ message: "Product not found" });
+  }
+
+  await productRepository.update({
+    ...req.body,
+    id: product.id,
+  });
+  return res.send();
+}

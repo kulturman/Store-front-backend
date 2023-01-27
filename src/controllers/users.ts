@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { UserRepository } from "../repositories/user-repository";
 import { compare, hash } from "bcrypt";
-import { generateUserToken } from "../helpers/token-helper";
+import { generatePassword, generateUserToken } from "../helpers/token-helper";
 
 const userRepository = new UserRepository();
 
@@ -63,5 +63,22 @@ export async function remove(req: Request, res: Response) {
   }
 
   await userRepository.delete(+req.params.id);
+  return res.send();
+}
+
+export async function update(req: Request, res: Response) {
+  const user = await userRepository.findOne(+req.params.id);
+
+  if (user === null) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  await userRepository.update({
+    ...req.body,
+    id: user.id,
+    password: req.body.password
+      ? await generatePassword(req.body.password)
+      : user.password,
+  });
   return res.send();
 }

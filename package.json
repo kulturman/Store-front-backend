@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint \"{src,tests}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
-    "test": "dotenv -e .env.test -- cross-env NODE_ENV=test jest --watch",
+    "test": "npm run build && dotenv -e .env.test -- cross-env NODE_ENV=test jest --watch",
     "dev": "concurrently \"tsc --watch\" \" nodemon dist/src/server.js\" ",
     "fixture-test": "dotenv -e .env.test -- node dist/src/helpers/run-fixtures.js",
     "fixture": "dotenv -e .env -- node dist/src/helpers/run-fixtures.js",

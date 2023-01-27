@@ -40,22 +40,37 @@ export abstract class AbstractRepository<T extends Record<string, any>> {
     });
   }
 
+  async update(t: T): Promise<boolean> {
+    const { query, values } = this.generateUpdateQuery(t);
+
+    return client.query(query, values).then((res) => {
+      if (res.rowCount > 0) {
+        return Promise.resolve(true);
+      } else {
+        return Promise.resolve(false);
+      }
+    });
+  }
+
   generateUpdateQuery(t: T): {
     query: string;
     //Since This is generic I have no choice
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     values: Array<any>;
   } {
-
     const validColumns = Object.keys(Object(t))
       .sort()
       .filter((column) => column !== "id");
-    const columnsNames = validColumns.map((column, index) => `"${column}" = \$${index + 1}`).join(", ");
+    const columnsNames = validColumns
+      .map((column, index) => `"${column}" = \$${index + 1}`)
+      .join(", ");
     const values = validColumns.map((column) => t[column]);
 
     return {
-        query: `UPDATE ${this.getTableName()} SET ${columnsNames} WHERE "id" = \$${validColumns.length + 1}`,
-        values: [...values, t["id"]],
+      query: `UPDATE ${this.getTableName()} SET ${columnsNames} WHERE "id" = \$${
+        validColumns.length + 1
+      }`,
+      values: [...values, t["id"]],
     };
   }
 
