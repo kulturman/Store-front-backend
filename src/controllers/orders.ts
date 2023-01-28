@@ -18,6 +18,24 @@ export async function getByUserId(req: Request, res: Response) {
   return res.send(orders);
 }
 
+export async function getById(req: Request, res: Response) {
+  const orderId = +req.params.id as number;
+  const order = await orderRepository.findOne(orderId as number);
+
+  if (order === null) {
+    return res.status(404).send({ message: "Order not found" });
+  }
+
+  const orderItems = await orderItemRepository.getByOrderId(order.id as number);
+
+  return res.send({
+    id: order.id as number,
+    userId: order.userId,
+    status: order.status,
+    products: orderItems,
+  });
+}
+
 export async function create(req: Request, res: Response) {
   const userId = req.body.userId as number;
   const products = req.body.products as Array<{ id: number; quantity: number }>;

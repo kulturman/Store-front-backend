@@ -1,5 +1,6 @@
 import request from "supertest";
 import { generateUserToken } from "../src/helpers/token-helper";
+import { OrderItem } from "../src/models/orderItem";
 import client from "../src/repositories/db";
 import { OrderRepository } from "../src/repositories/order-repository";
 import { OrderItemRepository } from "../src/repositories/orderItemRepository";
@@ -14,14 +15,6 @@ const token = generateUserToken({
 });
 
 describe("GET /api/orders", () => {
-  beforeEach(async () => {
-    await client.query("BEGIN");
-  });
-
-  afterEach(async () => {
-    await client.query("ROLLBACK");
-  });
-
   it("Should return list of orders", async () => {
     const result = await request(app)
       .get("/api/orders")
@@ -41,14 +34,6 @@ describe("GET /api/orders", () => {
 });
 
 describe("GET /api/orders/users/:userId", () => {
-  beforeEach(async () => {
-    await client.query("BEGIN");
-  });
-
-  afterEach(async () => {
-    await client.query("ROLLBACK");
-  });
-
   it("Should return list of user orders", async () => {
     const result = await request(app)
       .get("/api/orders/users/100")
@@ -190,5 +175,49 @@ describe("DELETE /api/orders/:orderId delete order", () => {
 
     order = await orderRepository.findOne(1000);
     expect(order).toBeFalsy();
+  });
+});
+
+describe("GET /api/orders/:orderId GET specific order", () => {
+  beforeEach(async () => {
+    await client.query("BEGIN");
+  });
+
+  afterEach(async () => {
+    await client.query("ROLLBACK");
+  });
+
+  it("Should return details of an order", async () => {
+    const orderItemRepository = new OrderItemRepository();
+    const orderItems: Array<OrderItem> = [
+      {
+        orderId: 1000,
+        productId: 1000,
+        quantity: 2,
+      },
+      {
+        orderId: 1000,
+        productId: 1100,
+        quantity: 200,
+      },
+    ];
+
+    orderItems.forEach(async (orderItem) => {
+      await orderItemRepository.create(orderItem);
+    });
+
+    const { body } = await request(app)
+      .get("/api/orders/1000")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200);
+    expect(body).toMatchObject({
+      id: 1000,
+      userId: 100,
+      status: "active",
+      products: [
+        { name: "Red wine", price: 35, quantity: 2 },
+        { name: "Burger", price: 58.4, quantity: 200 },
+      ],
+    });
   });
 });

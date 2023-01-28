@@ -13,14 +13,6 @@ const token = generateUserToken({
 });
 
 describe("GET /api/products", () => {
-  beforeEach(async () => {
-    await client.query("BEGIN");
-  });
-
-  afterEach(async () => {
-    await client.query("ROLLBACK");
-  });
-
   it("Should return list of products", async () => {
     const result = await request(app).get("/api/products").expect(200);
     expect(result.body.data[0]).toMatchObject({

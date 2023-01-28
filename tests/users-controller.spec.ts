@@ -13,14 +13,6 @@ const token = generateUserToken({
 });
 
 describe("GET /api/users", () => {
-  beforeEach(async () => {
-    await client.query("BEGIN");
-  });
-
-  afterEach(async () => {
-    await client.query("ROLLBACK");
-  });
-
   it("Should get a 401 if token not provided", async () => {
     await request(app).get("/api/users").expect(401);
   });

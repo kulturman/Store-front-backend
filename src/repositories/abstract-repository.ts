@@ -1,3 +1,4 @@
+import { Client } from "pg";
 import client from "./db";
 
 interface Filter {
@@ -8,6 +9,12 @@ interface Filter {
 //Since this should be generic I cannot really do better than any
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class AbstractRepository<T extends Record<string, any>> {
+  protected db: Client;
+
+  constructor() {
+    this.db = client;
+  }
+
   async getAll(
     page = 1,
     limit = 10,
@@ -16,14 +23,14 @@ export abstract class AbstractRepository<T extends Record<string, any>> {
     data: Array<T>;
     meta: { numberOfPages: number; totalRows: number };
   }> {
-    const { rows } = await client.query(
+    const { rows } = await this.db.query(
       `SELECT COUNT(*) FROM ${this.getTableName()} ${
         filter !== null ? ` WHERE "${filter.column}" = '${filter.value}'` : ""
       }`
     );
     const numberOfPages = Math.ceil(rows[0].count / limit);
 
-    const { rows: data } = await client.query(
+    const { rows: data } = await this.db.query(
       `SELECT * FROM ${this.getTableName()} ${
         filter !== null ? ` WHERE "${filter.column}" = '${filter.value}'` : ""
       } ORDER BY id ASC LIMIT $1 OFFSET $2`,
@@ -45,7 +52,7 @@ export abstract class AbstractRepository<T extends Record<string, any>> {
 
   async create(t: T): Promise<T> {
     const { query, values } = this.generateCreateQuery(t);
-    return client.query(query, values).then((res) => {
+    return this.db.query(query, values).then((res) => {
       return Promise.resolve(this.mapToEntity(res.rows[0]));
     });
   }
@@ -53,7 +60,7 @@ export abstract class AbstractRepository<T extends Record<string, any>> {
   async update(t: T): Promise<boolean> {
     const { query, values } = this.generateUpdateQuery(t);
 
-    return client.query(query, values).then((res) => {
+    return this.db.query(query, values).then((res) => {
       if (res.rowCount > 0) {
         return Promise.resolve(true);
       } else {
@@ -109,7 +116,7 @@ export abstract class AbstractRepository<T extends Record<string, any>> {
   }
 
   findOne(id: number): Promise<T | null> {
-    return client
+    return this.db
       .query(`SELECT * FROM ${this.getTableName()} WHERE id = $1`, [id])
       .then((res) => {
         if (res.rows[0]) {
@@ -120,7 +127,7 @@ export abstract class AbstractRepository<T extends Record<string, any>> {
   }
 
   delete(id: number): Promise<boolean> {
-    return client
+    return this.db
       .query(`DELETE FROM ${this.getTableName()} WHERE id = $1`, [id])
       .then((res) => {
         if (res.rowCount > 0) {
