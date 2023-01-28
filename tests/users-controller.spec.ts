@@ -1,8 +1,5 @@
 import request from "supertest";
-import {
-  generatePassword,
-  generateUserToken,
-} from "../src/helpers/token-helper";
+import { generateUserToken } from "../src/helpers/token-helper";
 import client from "../src/repositories/db";
 import { UserRepository } from "../src/repositories/user-repository";
 import app from "../src/server";
@@ -38,7 +35,7 @@ describe("GET /api/users", () => {
       id: 100,
       firstName: "Itachi",
       lastName: "UCHIHA",
-      password: "",
+      password: "123456",
       username: "itachi",
     });
 
@@ -66,7 +63,7 @@ describe("GET /users/id", () => {
       id: 200,
       lastName: "UCHIHA",
       firstName: "Mdara",
-      password: "",
+      password: "123456",
       username: "madara",
     });
   });

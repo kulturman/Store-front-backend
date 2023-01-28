@@ -7,11 +7,7 @@ export function authMiddleware(
   next: NextFunction
 ) {
   const token = req.header("Authorization");
-  const secretKey = process.env.JWT_SECRET_KEY;
-
-  if (secretKey === undefined) {
-    return res.status(500).send({ message: "Internal server error" });
-  }
+  const secretKey = process.env.JWT_SECRET_KEY as string;
 
   if (token === undefined) {
     return res.status(401).send({ message: "No token provided" });

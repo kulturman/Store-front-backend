@@ -1,22 +1,32 @@
 import client from "./db";
 
+interface Filter {
+  column: string;
+  value: number | string;
+}
+
 //Since this should be generic I cannot really do better than any
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class AbstractRepository<T extends Record<string, any>> {
   async getAll(
     page = 1,
-    limit = 10
+    limit = 10,
+    filter: Filter | null = null
   ): Promise<{
     data: Array<T>;
     meta: { numberOfPages: number; totalRows: number };
   }> {
     const { rows } = await client.query(
-      `SELECT COUNT(*) FROM ${this.getTableName()}`
+      `SELECT COUNT(*) FROM ${this.getTableName()} ${
+        filter !== null ? ` WHERE "${filter.column}" = '${filter.value}'` : ""
+      }`
     );
     const numberOfPages = Math.ceil(rows[0].count / limit);
 
     const { rows: data } = await client.query(
-      `SELECT * FROM ${this.getTableName()} ORDER BY id ASC LIMIT $1 OFFSET $2`,
+      `SELECT * FROM ${this.getTableName()} ${
+        filter !== null ? ` WHERE "${filter.column}" = '${filter.value}'` : ""
+      } ORDER BY id ASC LIMIT $1 OFFSET $2`,
       [limit, (page - 1) * limit]
     );
 

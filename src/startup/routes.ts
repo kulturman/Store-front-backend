@@ -6,5 +6,5 @@ import ordersRoutes from "../routes/orders";
 export function initializeRouting(app: Express) {
   app.use("/api/users", usersRoutes);
   app.use("/api/products", productsRoutes);
-  app.use("api/orders", ordersRoutes);
+  app.use("/api/orders", ordersRoutes);
 }

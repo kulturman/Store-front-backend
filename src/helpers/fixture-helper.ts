@@ -1,9 +1,11 @@
+import { Order } from "../models/order";
 import { Product } from "../models/product";
 import { User } from "../models/user";
+import { OrderRepository } from "../repositories/order-repository";
 import { ProductRepository } from "../repositories/product-repository";
 import { UserRepository } from "../repositories/user-repository";
 
-export function addFixtures() {
+export async function addFixtures() {
   const promises: Array<Promise<User | Product>> = [];
 
   const users: Array<User> = [
@@ -50,6 +52,29 @@ export function addFixtures() {
   products.forEach((product) =>
     promises.push(productRepository.create(product))
   );
+  await Promise.all(promises);
+}
 
-  return Promise.all(promises);
+export async function addFixturesWithForeignKeys() {
+  const orderRepository = new OrderRepository();
+  const promises: Array<Promise<Order>> = [];
+
+  const orders: Array<Order> = [
+    {
+      userId: 100,
+      status: "active",
+      id: 1000,
+    },
+    {
+      userId: 200,
+      status: "complete",
+      id: 2000,
+    },
+  ];
+
+  orders.forEach((order) => {
+    promises.push(orderRepository.create(order));
+  });
+
+  await Promise.all(promises);
 }

@@ -19,7 +19,7 @@ exports.up = function (db, callback) {
     "order_items",
     {
       id: { type: "int", primaryKey: true, autoIncrement: true },
-      order_id: {
+      orderId: {
         type: "int",
         foreignKey: {
           name: "order_items_orders_orders_id_id_id_fk",
@@ -31,11 +31,11 @@ exports.up = function (db, callback) {
           mapping: "id",
         },
       },
-      user_id: {
+      productId: {
         type: "int",
         foreignKey: {
-          name: "order_items_orders_users_id_id_id_fk",
-          table: "users",
+          name: "order_items_products_orders_id_id_id_fk",
+          table: "products",
           rules: {
             onDelete: "CASCADE",
             onUpdate: "CASCADE",

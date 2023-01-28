@@ -111,6 +111,17 @@ describe("UPDATE /products/:id", () => {
     await client.query("ROLLBACK");
   });
 
+  it("Should return 404 if product is not found", async () => {
+    await request(app)
+      .put("/api/products/10000")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "Burger king!!!!",
+        price: 2000,
+      })
+      .expect(404);
+  });
+
   it("Should return 200 if product is updated", async () => {
     const productRepository = new ProductRepository();
 
