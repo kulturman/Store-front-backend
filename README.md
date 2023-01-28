@@ -21,3 +21,7 @@ You will need docker to run the application easily
 
 ### 5. Run tests and see if everything woeks
     npm test
+    You can also run "npm run dev" to run the application
+
+### 6. Import collection (OPTIONAL)
+Look at "Store front collection.postman_collection.json"

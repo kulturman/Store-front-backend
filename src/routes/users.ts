@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/", authMiddleware, usersController.getAll);
 router.get("/:id", authMiddleware, usersController.find);
-router.post("/", authMiddleware, usersController.create);
+router.post("/", usersController.create);
 router.put("/:id", authMiddleware, usersController.update);
 router.delete("/:id", authMiddleware, usersController.remove);
 router.post("/auth", usersController.auth);
