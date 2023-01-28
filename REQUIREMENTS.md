@@ -24,23 +24,23 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## Data Shapes
 #### Product (table products)
--  id
-- name
-- price
+- id `SERIAL PRIMARY KEY`
+- name `VARCHAR`
+- price `INTEGER`
 
 #### User (table users)
-- id
-- username
-- firstName
-- lastName
-- password
+- id `SERIAL PRIMARY KEY`
+- username `VARCHAR`
+- firstName `VARCHAR`
+- lastName `VARCHAR`
+- password `VARCHAR`
 
 #### Order (table orders)
-- id
-- userId
-- status of order (active or complete)
+- id `SERIAL PRIMARY KEY`
+- userId `INTEGER`
+- status of order (active or complete) `VARCHAR`
 
 #### OrderItem (table order_items)
-- orderId
-- productId
-- quantity
+- orderId `INTEGER`
+- productId `INTEGER`
+- quantity `INTEGER`
