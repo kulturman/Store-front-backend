@@ -1,7 +1,7 @@
 # Storefront Backend Project
 
 ## Required Technologies
-You will need docker to run the application easily
+You will need docker to run the application easily, database is running on port 5432 and application on port 3000
 
 ### Installation instructions
 
