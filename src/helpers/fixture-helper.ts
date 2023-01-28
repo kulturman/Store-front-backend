@@ -2,7 +2,6 @@ import { Order } from "../models/order";
 import { Product } from "../models/product";
 import { User } from "../models/user";
 import { OrderRepository } from "../repositories/order-repository";
-import { OrderItemRepository } from "../repositories/orderItemRepository";
 import { ProductRepository } from "../repositories/product-repository";
 import { UserRepository } from "../repositories/user-repository";
 
