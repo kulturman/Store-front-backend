@@ -1,40 +1,52 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { UserRepository } from "../repositories/user-repository";
 import { compare, hash } from "bcrypt";
 import { generatePassword, generateUserToken } from "../helpers/token-helper";
 
 const userRepository = new UserRepository();
 
-export async function getAll(req: Request, res: Response) {
+export async function getAll(req: Request, res: Response, next: NextFunction) {
   const page = req.query.page ? +req.query.page : 1;
 
-  const data = await userRepository.getAll(page);
-  return res.send(data);
+  try {
+    const data = await userRepository.getAll(page);
+    return res.send(data);
+  } catch (error) {
+    return next(error);
+  }
 }
 
-export async function find(req: Request, res: Response) {
-  const user = await userRepository.findOne(+req.params.id);
+export async function find(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = await userRepository.findOne(+req.params.id);
 
-  if (user === null) {
-    return res.status(404).json({ message: "User not found" });
+    if (user === null) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.send(user);
+  } catch (error) {
+    return next(error);
   }
-
-  return res.send(user);
 }
 
-export async function create(req: Request, res: Response) {
-  const user = await userRepository.findByUsername(req.body.username);
+export async function create(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = await userRepository.findByUsername(req.body.username);
 
-  if (user) {
-    return res.status(400).json({ message: "Username is already taken" });
+    if (user) {
+      return res.status(400).json({ message: "Username is already taken" });
+    }
+
+    const hashedPassword = await hash(req.body.password, 10);
+    const result = await userRepository.create({
+      ...req.body,
+      password: hashedPassword,
+    });
+    return res.status(201).json(result);
+  } catch (error) {
+    return next(error);
   }
-
-  const hashedPassword = await hash(req.body.password, 10);
-  const result = await userRepository.create({
-    ...req.body,
-    password: hashedPassword,
-  });
-  return res.status(201).json(result);
 }
 
 export async function auth(req: Request, res: Response) {
@@ -55,30 +67,38 @@ export async function auth(req: Request, res: Response) {
   });
 }
 
-export async function remove(req: Request, res: Response) {
-  const user = await userRepository.findOne(+req.params.id);
+export async function remove(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = await userRepository.findOne(+req.params.id);
 
-  if (user === null) {
-    return res.status(404).json({ message: "User not found" });
+    if (user === null) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await userRepository.delete(+req.params.id);
+    return res.send();
+  } catch (error) {
+    return next(error);
   }
-
-  await userRepository.delete(+req.params.id);
-  return res.send();
 }
 
-export async function update(req: Request, res: Response) {
-  const user = await userRepository.findOne(+req.params.id);
+export async function update(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = await userRepository.findOne(+req.params.id);
 
-  if (user === null) {
-    return res.status(404).json({ message: "User not found" });
+    if (user === null) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await userRepository.update({
+      ...req.body,
+      id: user.id,
+      password: req.body.password
+        ? await generatePassword(req.body.password)
+        : user.password,
+    });
+    return res.send();
+  } catch (error) {
+    return next(error);
   }
-
-  await userRepository.update({
-    ...req.body,
-    id: user.id,
-    password: req.body.password
-      ? await generatePassword(req.body.password)
-      : user.password,
-  });
-  return res.send();
 }
