@@ -4,6 +4,7 @@ import { User } from "../models/user";
 import { OrderRepository } from "../repositories/order-repository";
 import { ProductRepository } from "../repositories/product-repository";
 import { UserRepository } from "../repositories/user-repository";
+import { generatePassword } from "./token-helper";
 
 export async function addFixtures() {
   const promises: Array<Promise<User | Product>> = [];
@@ -13,21 +14,21 @@ export async function addFixtures() {
       id: 100,
       firstName: "Itachi",
       lastName: "UCHIHA",
-      password: "123456",
+      password: await generatePassword("123456"),
       username: "itachi",
     },
     {
       id: 200,
       firstName: "Mdara",
       lastName: "UCHIHA",
-      password: "123456",
+      password: await generatePassword("123456"),
       username: "madara",
     },
     {
       id: 300,
       firstName: "Kakashi",
       lastName: "HATAKE",
-      password: "123456",
+      password: await generatePassword("123456"),
       username: "kakahi",
     },
   ];

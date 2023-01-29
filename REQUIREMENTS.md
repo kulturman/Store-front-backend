@@ -37,10 +37,10 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Order (table orders)
 - id `SERIAL PRIMARY KEY`
-- userId `INTEGER`
+- userId `INTEGER  REFERENCES users(id)`
 - status of order (active or complete) `VARCHAR`
 
 #### OrderItem (table order_items)
-- orderId `INTEGER`
-- productId `INTEGER`
+- orderId `INTEGER REFERENCES orders(id)`
+- productId `INTEGER REFERENCES products(id)`
 - quantity `INTEGER`

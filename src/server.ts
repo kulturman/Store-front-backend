@@ -1,6 +1,8 @@
 import express, { Express } from "express";
 import { configureDotEnv } from "./helpers/config-helper";
 import { initializeRouting } from "./startup/routes";
+import "express-async-errors";
+import errorMiddleware from "./middlewares/error";
 
 const app: Express = express();
 const port = 3000;
