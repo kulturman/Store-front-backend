@@ -19,7 +19,7 @@ You will need docker to run the application easily, database is running on port 
 ### 5. Run fixtures (dev and test)
     npm run fixture && npm run fixture-test
 
-### 5. Run tests and see if everything woeks
+### 5. Run tests and see if everything works
     npm test
     You can also run "npm run dev" to run the application
 
